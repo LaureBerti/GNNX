@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gnnxc"
+version = "0.0.1"
+description = "Statistical x logical self-consistency diagnostic for GNN-classification explanations"
+requires-python = ">=3.10"  # 3.10-safe (uses `from __future__ import annotations`)
+dependencies = [
+    "numpy",
+    "scipy",
+    "networkx",          # subgraph-isomorphism concept projection
+    "hydra-core",        # config (workspace rule: Hydra + OmegaConf)
+    "omegaconf",
+    "matplotlib",        # dissociation-plane figure
+    "scikit-learn",      # deterministic decision-tree aggregator (CORELS = optional extra)
+    "python-sat",        # SAT non-contradiction check
+    "z3-solver",         # equivalence / entailment
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+# CORELS optimal rule lists — OPTIONAL, opt-in only. The canonical aggregator is the
+# pure-Python decision tree (with OneR and a greedy conjunction as capacity controls),
+# so this native extra is not required to reproduce any reported result.
+corels = ["corels"]
+# Explainer adapters — heavy/finicky; adapters skip-if-import, never fake outputs.
+explainers = [
+    "torch",
+    "torch-geometric",   # GNNExplainer, PGExplainer, IntegratedGradients (native .explain)
+    "captum",            # backend for PyG CaptumExplainer (Integrated Gradients / the IG ceiling)
+    "dive-into-graphs",  # DIG: SubgraphX (optional; omitted from the reported grid, see paper)
+]
+
+[project.scripts]
+gnnxc = "gnnxc.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["gnnxc*"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
