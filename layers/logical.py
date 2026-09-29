@@ -96,7 +96,7 @@ def equivalent_z3(r1: Rule, r2: Rule, names: Sequence[str] | None = None) -> boo
     Encodes each rule's predicted class as a nested if-then-else over Boolean
     concept vars and asserts non-equivalence is UNSAT.
     """
-    import z3  # optional; enumeration is the default path
+    import z3
 
     ns = _names([r1, r2], names)
     vs = {n: z3.Bool(n) for n in ns}

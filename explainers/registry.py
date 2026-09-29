@@ -11,16 +11,14 @@ from typing import Optional
 from .base import Explainer
 from .mock import MockExplainer
 
-# names that resolve to a compute-free stand-in
 _MOCKS = {
     "mock": lambda: MockExplainer(mode="deterministic"),
-    "ig_ceiling": lambda: MockExplainer(mode="deterministic"),  # deterministic ceiling
-    "random": lambda: MockExplainer(mode="noisy"),              # chance floor
+    "ig_ceiling": lambda: MockExplainer(mode="deterministic"),
+    "random": lambda: MockExplainer(mode="noisy"),
 }
 
-# real adapters — imported lazily; return None (skip) if deps unavailable
 _REAL = {"gnnexplainer", "pgexplainer", "subgraphx", "ig", "gt_oracle"}
-_MODEL_FREE = {"gt_oracle"}  # real controls that need no trained model
+_MODEL_FREE = {"gt_oracle"}
 
 
 def build_explainer(name: str, model=None, dataset=None) -> Optional[Explainer]:
@@ -33,9 +31,9 @@ def build_explainer(name: str, model=None, dataset=None) -> Optional[Explainer]:
         return _MOCKS[name]()
     if name in _REAL:
         try:
-            from . import adapters  # noqa: F401  (skip-if-import)
+            from . import adapters
 
-            return adapters.build(name, model=model, dataset=dataset)  # type: ignore[attr-defined]
+            return adapters.build(name, model=model, dataset=dataset)
         except Exception:
             return None
     raise ValueError(f"unknown explainer: {name!r}")

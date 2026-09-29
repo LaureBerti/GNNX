@@ -85,7 +85,6 @@ def run(overrides: List[str]) -> dict:
     S, floor = int(cfg.seeds.S), int(cfg.seeds.floor)
 
     points, certs, skipped, accuracies = [], [], [], []
-    # Dataset-outer: train ONE GIN per dataset, reuse it across explainers.
     from .data import is_molecular
     from .project.mine import admissibility
 
@@ -110,9 +109,6 @@ def run(overrides: List[str]) -> dict:
             "points": points,
             "off_diagonal_proportion": off_diagonal_proportion(pts),
             "logic_admissibility": admissibility(points, tau=tau),
-            # Confounder analysis (C5 reporting standard): flags apparent dissociations that do
-            # not survive the aggregator-capacity control. explainer_isolated is True because each
-            # explainer runs on a fresh model object (_fresh_model_for_explainer).
             "confounder_analysis": confounder_analysis(
                 points, isolated=True) if bool(cfg.projection.aggregator_alt) else None,
             "certificates": certs,
@@ -128,17 +124,14 @@ def run(overrides: List[str]) -> dict:
         if holdout:
             import numpy as _np
 
-            rng = _np.random.default_rng(0)  # fixed split; only model init varies across seeds
+            rng = _np.random.default_rng(0)
             idx = rng.permutation(len(full_dataset))
             cut = int(round((1.0 - float(cfg.data.test_fraction)) * len(full_dataset)))
             train_ds = [full_dataset[int(i)] for i in idx[:cut]]
             eval_ds = [full_dataset[int(i)] for i in idx[cut:]]
         else:
             train_ds = eval_ds = full_dataset
-        gt_dataset = eval_ds  # the diagnostic is measured on the held-out (or full) set
-        # Adaptive mining is applied ONLY to molecular datasets, where the fixed
-        # vocabulary degenerates (random floor saturates). Synthetic datasets keep the
-        # validated fixed structural vocabulary — the positive-control instrument.
+        gt_dataset = eval_ds
         if adaptive and is_molecular(str(ds_name)):
             from .project.mine import mine_vocab
 
@@ -151,14 +144,12 @@ def run(overrides: List[str]) -> dict:
                 seed=int(cfg.projection.mine_seed),
             )
             print(f"[{ds_name}] mined adaptive vocab ({len(vocab)}): {list(vocab)}")
-            if not vocab:  # no mid-frequency concept exists → axis cannot be built; skip, never fake
+            if not vocab:
                 skipped.append(f"{ds_name}(empty adaptive vocab — no informative concept)")
                 continue
         else:
-            vocab = vocab_for(str(ds_name))  # label-aware for molecular datasets
+            vocab = vocab_for(str(ds_name))
         wants_model = any(needs_model(str(e)) for e in cfg.explainers)
-        # Model-seed axis (ii): one GIN per model seed, so we can separate model-induced
-        # from explainer-induced variance and report the dissociation with a CI over seeds.
         model_seeds = [int(s) for s in cfg.seeds.model_seeds]
         for ms in model_seeds:
             model, model_dataset = None, gt_dataset
@@ -173,39 +164,31 @@ def run(overrides: List[str]) -> dict:
                 accuracies.append({"dataset": str(ds_name), "model_seed": ms,
                                    "train_acc": tr_acc, "test_acc": te_acc, "holdout": holdout})
                 print(f"[{ds_name}] model_seed={ms} GIN — train {tr_acc:.3f} test {te_acc:.3f}")
-                model_dataset = _labeled_for_model(gt_dataset, model)  # ŷ = model prediction on eval set
+                model_dataset = _labeled_for_model(gt_dataset, model)
 
             import copy as _copy
 
             pristine_model = (_copy.deepcopy(model) if model is not None else None)
             for expl_name in cfg.explainers:
-                # Explainer isolation: each explainer gets a FRESH model object so it cannot inherit
-                # another explainer's residual state on the shared module (see
-                # _fresh_model_for_explainer). Without this the grid's headline dissociation is an
-                # execution-order artefact, not a property of the explainer.
                 expl_model = _fresh_model_for_explainer(pristine_model)
-                # PGExplainer trains its mask predictor on the model-labelled dataset.
                 ex = build_explainer(str(expl_name), model=expl_model, dataset=model_dataset)
                 if ex is None:
-                    skipped.append(f"{expl_name}@{ds_name}#{ms}")  # deps/model unavailable → skip, never fake
+                    skipped.append(f"{expl_name}@{ds_name}#{ms}")
                     continue
-                # GT-oracle needs planted-motif ground truth — skip where absent, never fake.
                 if str(expl_name) == "gt_oracle" and not gt_dataset[0][0].graph.get("motif_edges"):
                     skipped.append(f"gt_oracle@{ds_name}(no ground-truth motif)")
                     continue
-                ex = CachingExplainer(ex)  # explanations computed once, reused across all k
+                ex = CachingExplainer(ex)
                 dataset = model_dataset if needs_model(str(expl_name)) else gt_dataset
-                # Sweep sparsity k: explanations are k-independent + cached, so this is cheap.
                 for k in cfg.k_sweep:
                     k = int(k)
                     logic = explainer_consistency(ex, dataset, S, k, vocab=vocab, seed_floor=floor,
                                               aggregator=str(cfg.projection.aggregator))
                     alt = str(cfg.projection.aggregator_alt)
-                    # second-aggregator control in one pass: reuses ex's cached explanations
                     logic_alt = (explainer_consistency(ex, dataset, S, k, vocab=vocab, seed_floor=floor,
                                                        aggregator=alt).rate if alt else None)
                     stat = statistical_consistency(ex, dataset, S, k)
-                    gea = explanation_accuracy(ex, dataset, S, k)  # vs ground-truth motif (GraphXAI GEA)
+                    gea = explanation_accuracy(ex, dataset, S, k)
                     points.append(
                         {"explainer": str(expl_name), "dataset": str(ds_name), "k": k,
                          "model_seed": ms,
@@ -222,8 +205,8 @@ def run(overrides: List[str]) -> dict:
                             ceiling=(1.0 if str(expl_name) in ("ig", "ig_ceiling", "mock") else None),
                         )
                     )
-            _flush()  # checkpoint after each model seed (intra-dataset resume-safety)
-        _flush()  # checkpoint after each dataset
+            _flush()
+        _flush()
 
     report = _flush()
     path = os.path.join(out_dir, "report.json")

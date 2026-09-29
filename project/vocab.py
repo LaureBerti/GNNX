@@ -20,19 +20,16 @@ def _cycle(n: int) -> nx.Graph:
 
 
 def _house() -> nx.Graph:
-    # BA-2Motifs "house": a 4-cycle with a triangular roof (5 nodes, 6 edges).
     g = nx.Graph()
     g.add_edges_from([(0, 1), (1, 2), (2, 3), (3, 0), (0, 4), (1, 4)])
     return g
 
 
 def _grid() -> nx.Graph:
-    # BAMultiShapes "grid": 3x3 lattice.
     return nx.convert_node_labels_to_integers(nx.grid_2d_graph(3, 3))
 
 
 def _wheel() -> nx.Graph:
-    # BAMultiShapes "wheel".
     return nx.wheel_graph(6)
 
 
@@ -46,8 +43,8 @@ def default_vocab() -> "OrderedDict[str, nx.Graph]":
     return OrderedDict(
         [
             ("triangle", _cycle(3)),
-            ("cycle", _cycle(5)),      # generic 5-cycle (house base / BA cycle motif)
-            ("benzene", _cycle(6)),    # 6-ring
+            ("cycle", _cycle(5)),
+            ("benzene", _cycle(6)),
             ("house", _house()),
             ("grid", _grid()),
             ("wheel", _wheel()),
@@ -75,14 +72,13 @@ def _benzene() -> nx.Graph:
 
 
 def _nitro() -> nx.Graph:
-    # NO2 group: an N bonded to two O atoms.
     g = nx.Graph()
     g.add_node(0, atom="N"); g.add_node(1, atom="O"); g.add_node(2, atom="O")
     g.add_edges_from([(0, 1), (0, 2)])
     return g
 
 
-def _carbonyl() -> nx.Graph:  # C bonded to O
+def _carbonyl() -> nx.Graph:
     g = nx.Graph(); g.add_node(0, atom="C"); g.add_node(1, atom="O"); g.add_edge(0, 1)
     return g
 
@@ -90,7 +86,7 @@ def _carbonyl() -> nx.Graph:  # C bonded to O
 def _aromatic_benzene() -> nx.Graph:
     """Aromatic-carbon 6-ring: the ground-truth motif of the Benzene benchmark."""
     g = nx.cycle_graph(6)
-    nx.set_node_attributes(g, "c", "atom")  # lowercase 'c' = aromatic carbon (RDKit convention)
+    nx.set_node_attributes(g, "c", "atom")
     return g
 
 
@@ -101,9 +97,9 @@ def benzene_vocab() -> "OrderedDict[str, nx.Graph]":
     logical axis is informative (admissible) — validated in the Benzene prototype."""
     return OrderedDict(
         [
-            ("benzene", _aromatic_benzene()),   # GT motif (aromatic carbon 6-ring)
-            ("carbonyl", _carbonyl()),           # C=O distractor
-            ("aromatic_n", _atom("n")),          # aromatic N (pyridine-like negatives)
+            ("benzene", _aromatic_benzene()),
+            ("carbonyl", _carbonyl()),
+            ("aromatic_n", _atom("n")),
             ("nitrogen", _atom("N")),
             ("oxygen", _atom("O")),
         ]
@@ -113,7 +109,7 @@ def benzene_vocab() -> "OrderedDict[str, nx.Graph]":
 def _alkane3() -> nx.Graph:
     """A short unbranched aliphatic-carbon chain (alkane proxy)."""
     g = nx.path_graph(3)
-    nx.set_node_attributes(g, "C", "atom")   # uppercase 'C' = aliphatic carbon
+    nx.set_node_attributes(g, "C", "atom")
     return g
 
 
@@ -152,13 +148,13 @@ def molecular_vocab() -> "OrderedDict[str, nx.Graph]":
     """
     return OrderedDict(
         [
-            ("benzene", _benzene()),      # aromatic 6-ring of carbons
-            ("nitro", _nitro()),          # NO2 (the classic mutagenic motif)
-            ("carbonyl", _carbonyl()),    # C=O
-            ("nitrogen", _atom("N")),     # contains an N atom
-            ("oxygen", _atom("O")),       # contains an O atom
+            ("benzene", _benzene()),
+            ("nitro", _nitro()),
+            ("carbonyl", _carbonyl()),
+            ("nitrogen", _atom("N")),
+            ("oxygen", _atom("O")),
             ("fluorine", _atom("F")),
             ("chlorine", _atom("Cl")),
-            ("ring6", _cycle(6)),         # any 6-ring (structural, label-agnostic)
+            ("ring6", _cycle(6)),
         ]
     )

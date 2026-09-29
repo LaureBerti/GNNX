@@ -110,7 +110,6 @@ def mine_vocab(
             seen.add(h)
             if h not in template:
                 t = nx.convert_node_labels_to_integers(sub)
-                # keep only the atom attribute on the template (drop stray attrs)
                 if labeled:
                     for _, d in t.nodes(data=True):
                         for key in list(d):
@@ -127,7 +126,6 @@ def mine_vocab(
 
     lo, hi = band
     cand = [(h, support[h] / N) for h in support if lo <= support[h] / N <= hi]
-    # informative-first: closest to df=0.5 (max variance); tie-break higher df, then hash
     cand.sort(key=lambda x: (abs(x[1] - 0.5), -x[1], x[0]))
     vocab: "OrderedDict[str, nx.Graph]" = OrderedDict()
     for i, (h, _df) in enumerate(cand[:max_concepts]):

@@ -1,0 +1,76 @@
+PRE-DECLARED: robust contradiction iff >=2/3 model seeds have CI-upper<0.50 under BOTH aggregators.
+
+bamultishapes ms0 k10 pgexplai-ig: tree 0.000 CI[0.00,0.00] | oneR 0.000 CI[0.00,0.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.6938621563621564 ig=0.5513842638842639)
+bamultishapes ms0 k10 pgexplai-random: tree 0.000 CI[0.00,0.00] | oneR 0.000 CI[0.00,0.00] | conj 0.900 CI[0.77,1.00]  (GEA pg=0.6938621563621564 ig=0.5513842638842639)
+bamultishapes ms0 k10 ig-random: tree 0.000 CI[0.00,0.00] | oneR 0.900 CI[0.77,1.00] | conj 0.900 CI[0.77,1.00]  (GEA pg=0.6938621563621564 ig=0.5513842638842639)
+bamultishapes ms0 k15 pgexplai-ig: tree 0.900 CI[0.77,1.00] | oneR 1.000 CI[1.00,1.00] | conj 0.967 CI[0.90,1.00]  (GEA pg=0.5887499976111303 ig=0.5256032851737186)
+bamultishapes ms0 k15 pgexplai-random: tree 0.030 CI[0.00,0.10] | oneR 0.033 CI[0.00,0.10] | conj 0.774 CI[0.63,0.90]  (GEA pg=0.5887499976111303 ig=0.5256032851737186)
+bamultishapes ms0 k15 ig-random: tree 0.033 CI[0.00,0.10] | oneR 0.033 CI[0.00,0.10] | conj 0.800 CI[0.67,0.93]  (GEA pg=0.5887499976111303 ig=0.5256032851737186)
+bamultishapes ms1 k10 pgexplai-ig: tree 0.967 CI[0.90,1.00] | oneR 0.967 CI[0.90,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.5129622044622044 ig=0.5659741647241647)
+bamultishapes ms1 k10 pgexplai-random: tree 0.000 CI[0.00,0.00] | oneR 0.030 CI[0.00,0.09] | conj 0.900 CI[0.80,1.00]  (GEA pg=0.5129622044622044 ig=0.5659741647241647)
+bamultishapes ms1 k10 ig-random: tree 0.000 CI[0.00,0.00] | oneR 0.000 CI[0.00,0.00] | conj 0.900 CI[0.77,1.00]  (GEA pg=0.5129622044622044 ig=0.5659741647241647)
+bamultishapes ms1 k15 pgexplai-ig: tree 1.000 CI[1.00,1.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.491034801054925 ig=0.5386678706570347)
+bamultishapes ms1 k15 pgexplai-random: tree 0.033 CI[0.00,0.10] | oneR 0.033 CI[0.00,0.10] | conj 0.800 CI[0.67,0.93]  (GEA pg=0.491034801054925 ig=0.5386678706570347)
+bamultishapes ms1 k15 ig-random: tree 0.033 CI[0.00,0.10] | oneR 0.033 CI[0.00,0.10] | conj 0.800 CI[0.67,0.93]  (GEA pg=0.491034801054925 ig=0.5386678706570347)
+bamultishapes ms2 k10 pgexplai-ig: tree 0.533 CI[0.37,0.70] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.5328121878121878 ig=0.6283361083361084)
+bamultishapes ms2 k10 pgexplai-random: tree 0.000 CI[0.00,0.00] | oneR 0.000 CI[0.00,0.00] | conj 0.900 CI[0.80,1.00]  (GEA pg=0.5328121878121878 ig=0.6283361083361084)
+bamultishapes ms2 k10 ig-random: tree 0.000 CI[0.00,0.00] | oneR 0.000 CI[0.00,0.00] | conj 0.900 CI[0.80,1.00]  (GEA pg=0.5328121878121878 ig=0.6283361083361084)
+bamultishapes ms2 k15 pgexplai-ig: tree 1.000 CI[1.00,1.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.48216443068455456 ig=0.5624305555555555)
+bamultishapes ms2 k15 pgexplai-random: tree 0.033 CI[0.00,0.10] | oneR 0.033 CI[0.00,0.10] | conj 0.800 CI[0.63,0.93]  (GEA pg=0.48216443068455456 ig=0.5624305555555555)
+bamultishapes ms2 k15 ig-random: tree 0.033 CI[0.00,0.10] | oneR 0.033 CI[0.00,0.10] | conj 0.800 CI[0.67,0.93]  (GEA pg=0.48216443068455456 ig=0.5624305555555555)
+mutag         ms0 k10 pgexplai-ig: tree 0.000 CI[0.00,0.00] | oneR 0.033 CI[0.00,0.10] | conj 0.000 CI[0.00,0.00]  (GEA pg=None ig=None)
+mutag         ms0 k10 pgexplai-random: tree 0.246 CI[0.12,0.38] | oneR 0.648 CI[0.49,0.80] | conj 0.433 CI[0.27,0.60]  (GEA pg=None ig=None)
+mutag         ms0 k10 ig-random: tree 0.100 CI[0.00,0.23] | oneR 0.100 CI[0.00,0.23] | conj 0.100 CI[0.00,0.23]  (GEA pg=None ig=None)
+mutag         ms0 k15 pgexplai-ig: tree 1.000 CI[1.00,1.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=None ig=None)
+mutag         ms0 k15 pgexplai-random: tree 0.000 CI[0.00,0.00] | oneR 0.033 CI[0.00,0.10] | conj 0.000 CI[0.00,0.00]  (GEA pg=None ig=None)
+mutag         ms0 k15 ig-random: tree 0.000 CI[0.00,0.00] | oneR 0.033 CI[0.00,0.10] | conj 0.000 CI[0.00,0.00]  (GEA pg=None ig=None)
+mutag         ms1 k10 pgexplai-ig: tree 1.000 CI[1.00,1.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=None ig=None)
+mutag         ms1 k10 pgexplai-random: tree 0.233 CI[0.10,0.40] | oneR 0.267 CI[0.10,0.43] | conj 0.233 CI[0.10,0.40]  (GEA pg=None ig=None)
+mutag         ms1 k10 ig-random: tree 0.233 CI[0.10,0.40] | oneR 0.267 CI[0.10,0.43] | conj 0.233 CI[0.10,0.40]  (GEA pg=None ig=None)
+mutag         ms1 k15 pgexplai-ig: tree 1.000 CI[1.00,1.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=None ig=None)
+mutag         ms1 k15 pgexplai-random: tree 0.167 CI[0.03,0.30] | oneR 0.333 CI[0.17,0.50] | conj 0.300 CI[0.13,0.47]  (GEA pg=None ig=None)
+mutag         ms1 k15 ig-random: tree 0.167 CI[0.03,0.30] | oneR 0.333 CI[0.17,0.50] | conj 0.300 CI[0.13,0.47]  (GEA pg=None ig=None)
+mutag         ms2 k10 pgexplai-ig: tree 0.000 CI[0.00,0.00] | oneR 1.000 CI[1.00,1.00] | conj 0.300 CI[0.17,0.47]  (GEA pg=None ig=None)
+mutag         ms2 k10 pgexplai-random: tree 0.140 CI[0.04,0.27] | oneR 0.200 CI[0.07,0.37] | conj 0.140 CI[0.04,0.26]  (GEA pg=None ig=None)
+mutag         ms2 k10 ig-random: tree 0.567 CI[0.40,0.73] | oneR 0.200 CI[0.07,0.37] | conj 0.000 CI[0.00,0.00]  (GEA pg=None ig=None)
+mutag         ms2 k15 pgexplai-ig: tree 1.000 CI[1.00,1.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=None ig=None)
+mutag         ms2 k15 pgexplai-random: tree 0.233 CI[0.10,0.40] | oneR 0.300 CI[0.13,0.47] | conj 0.267 CI[0.13,0.43]  (GEA pg=None ig=None)
+mutag         ms2 k15 ig-random: tree 0.233 CI[0.10,0.37] | oneR 0.300 CI[0.17,0.47] | conj 0.267 CI[0.13,0.43]  (GEA pg=None ig=None)
+ba2motifs     ms0 k10 pgexplai-ig: tree 0.000 CI[0.00,0.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.3 ig=0.5149999999999999)
+ba2motifs     ms0 k10 pgexplai-random: tree 0.000 CI[0.00,0.00] | oneR 0.100 CI[0.00,0.23] | conj 0.000 CI[0.00,0.00]  (GEA pg=0.3 ig=0.5149999999999999)
+ba2motifs     ms0 k10 ig-random: tree 0.100 CI[0.00,0.23] | oneR 0.100 CI[0.00,0.20] | conj 0.000 CI[0.00,0.00]  (GEA pg=0.3 ig=0.5149999999999999)
+ba2motifs     ms0 k15 pgexplai-ig: tree 0.000 CI[0.00,0.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.2 ig=0.34801062091503265)
+ba2motifs     ms0 k15 pgexplai-random: tree 0.000 CI[0.00,0.00] | oneR 0.533 CI[0.37,0.70] | conj 0.267 CI[0.13,0.43]  (GEA pg=0.2 ig=0.34801062091503265)
+ba2motifs     ms0 k15 ig-random: tree 0.200 CI[0.07,0.37] | oneR 0.533 CI[0.37,0.73] | conj 0.267 CI[0.13,0.43]  (GEA pg=0.2 ig=0.34801062091503265)
+ba2motifs     ms1 k10 pgexplai-ig: tree 1.000 CI[1.00,1.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.2917575757575757 ig=0.516060606060606)
+ba2motifs     ms1 k10 pgexplai-random: tree 0.100 CI[0.00,0.23] | oneR 0.100 CI[0.00,0.23] | conj 0.000 CI[0.00,0.00]  (GEA pg=0.2917575757575757 ig=0.516060606060606)
+ba2motifs     ms1 k10 ig-random: tree 0.100 CI[0.00,0.23] | oneR 0.100 CI[0.00,0.20] | conj 0.000 CI[0.00,0.00]  (GEA pg=0.2917575757575757 ig=0.516060606060606)
+ba2motifs     ms1 k15 pgexplai-ig: tree 1.000 CI[1.00,1.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.1973263888888889 ig=0.34625)
+ba2motifs     ms1 k15 pgexplai-random: tree 0.200 CI[0.07,0.37] | oneR 0.533 CI[0.33,0.70] | conj 0.267 CI[0.10,0.43]  (GEA pg=0.1973263888888889 ig=0.34625)
+ba2motifs     ms1 k15 ig-random: tree 0.200 CI[0.07,0.37] | oneR 0.533 CI[0.37,0.70] | conj 0.267 CI[0.13,0.43]  (GEA pg=0.1973263888888889 ig=0.34625)
+ba2motifs     ms2 k10 pgexplai-ig: tree 0.000 CI[0.00,0.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.3001709401709402 ig=0.5184848484848484)
+ba2motifs     ms2 k10 pgexplai-random: tree 0.000 CI[0.00,0.00] | oneR 0.100 CI[0.00,0.20] | conj 0.000 CI[0.00,0.00]  (GEA pg=0.3001709401709402 ig=0.5184848484848484)
+ba2motifs     ms2 k10 ig-random: tree 0.100 CI[0.00,0.20] | oneR 0.100 CI[0.00,0.23] | conj 0.000 CI[0.00,0.00]  (GEA pg=0.3001709401709402 ig=0.5184848484848484)
+ba2motifs     ms2 k15 pgexplai-ig: tree 0.000 CI[0.00,0.00] | oneR 1.000 CI[1.00,1.00] | conj 1.000 CI[1.00,1.00]  (GEA pg=0.20046133853151396 ig=0.34770833333333334)
+ba2motifs     ms2 k15 pgexplai-random: tree 0.000 CI[0.00,0.00] | oneR 0.533 CI[0.37,0.70] | conj 0.267 CI[0.13,0.43]  (GEA pg=0.20046133853151396 ig=0.34770833333333334)
+ba2motifs     ms2 k15 ig-random: tree 0.200 CI[0.07,0.33] | oneR 0.533 CI[0.33,0.70] | conj 0.267 CI[0.13,0.43]  (GEA pg=0.20046133853151396 ig=0.34770833333333334)
+
+=== PRE-DECLARED verdicts (robust iff CI-upper<0.50 under ALL THREE aggregators in >=2/3 seeds) ===
+ba2motifs     k10 ig-random: robust in 3/3 model seeds -> ROBUST CONTRADICTION
+ba2motifs     k10 pgexplai-ig: robust in 0/3 model seeds -> not robust
+ba2motifs     k10 pgexplai-random: robust in 3/3 model seeds -> ROBUST CONTRADICTION
+ba2motifs     k15 ig-random: robust in 0/3 model seeds -> not robust
+ba2motifs     k15 pgexplai-ig: robust in 0/3 model seeds -> not robust
+ba2motifs     k15 pgexplai-random: robust in 0/3 model seeds -> not robust
+bamultishapes k10 ig-random: robust in 0/3 model seeds -> not robust
+bamultishapes k10 pgexplai-ig: robust in 0/3 model seeds -> not robust
+bamultishapes k10 pgexplai-random: robust in 0/3 model seeds -> not robust
+bamultishapes k15 ig-random: robust in 0/3 model seeds -> not robust
+bamultishapes k15 pgexplai-ig: robust in 0/3 model seeds -> not robust
+bamultishapes k15 pgexplai-random: robust in 0/3 model seeds -> not robust
+mutag         k10 ig-random: robust in 2/3 model seeds -> ROBUST CONTRADICTION
+mutag         k10 pgexplai-ig: robust in 1/3 model seeds -> not robust
+mutag         k10 pgexplai-random: robust in 2/3 model seeds -> ROBUST CONTRADICTION
+mutag         k15 ig-random: robust in 2/3 model seeds -> ROBUST CONTRADICTION
+mutag         k15 pgexplai-ig: robust in 0/3 model seeds -> not robust
+mutag         k15 pgexplai-random: robust in 2/3 model seeds -> ROBUST CONTRADICTION

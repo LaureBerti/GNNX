@@ -20,9 +20,9 @@ def certificate(
     logic_ci: tuple,
     n_seeds: int,
     under_powered: bool,
-    floor: Optional[float] = None,      # random-subgraph chance floor
-    ceiling: Optional[float] = None,    # IG-ceiling validator (must be 1.0)
-    oracle: Optional[float] = None,     # GT-motif correctness anchor
+    floor: Optional[float] = None,
+    ceiling: Optional[float] = None,
+    oracle: Optional[float] = None,
 ) -> dict:
     """Build one certificate record. ``ceiling`` != 1.0 flags a leaking apparatus."""
     return {

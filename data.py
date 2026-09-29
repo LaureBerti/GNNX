@@ -22,9 +22,8 @@ def _ba_base(n: int, rng) -> nx.Graph:
 
 
 def _attach(base: nx.Graph, motif: nx.Graph, rng) -> nx.Graph:
-    g = nx.disjoint_union(base, motif)  # base: 0..nb-1, motif: nb..nb+nm-1
+    g = nx.disjoint_union(base, motif)
     nb = base.number_of_nodes()
-    # Record the planted-motif edges (ground truth) for the GT-oracle control.
     g.graph["motif_edges"] = {frozenset((nb + u, nb + v)) for u, v in motif.edges()}
     b = int(rng.integers(0, nb))
     m = nb + int(rng.integers(0, motif.number_of_nodes()))
@@ -68,7 +67,7 @@ def load_mutag(n_graphs: int = 150, seed: int = 0) -> List[Labeled]:
     try:
         from torch_geometric.datasets import TUDataset
         from torch_geometric.utils import to_networkx
-    except Exception as e:  # pragma: no cover - exercised only when PyG present
+    except Exception as e:
         raise ImportError(f"MUTAG requires torch-geometric: {e}")
     ds = TUDataset(root="data/TUDataset", name="MUTAG")
     out: List[Labeled] = []
@@ -78,7 +77,6 @@ def load_mutag(n_graphs: int = 150, seed: int = 0) -> List[Labeled]:
     return out
 
 
-# Atom-type orderings for TUDataset one-hot node labels (dataset-specific).
 _MUTAG_ATOMS = ["C", "N", "O", "F", "I", "Cl", "Br"]
 _MUTAGENICITY_ATOMS = ["C", "O", "Cl", "H", "N", "F", "Br", "S", "P", "I",
                         "Na", "K", "Li", "Ca"]
@@ -91,7 +89,7 @@ def _tu_labeled(name: str, atoms: List[str], n_graphs: int, seed: int) -> List[L
     label-aware projection can match molecular motifs. VM-validated: the atom
     ordering must match the dataset's node-label encoding.
     """
-    from torch_geometric.datasets import TUDataset  # noqa: F401
+    from torch_geometric.datasets import TUDataset
     import numpy as np
 
     ds = TUDataset(root="data/TUDataset", name=name)
@@ -115,8 +113,8 @@ def _tu_labeled(name: str, atoms: List[str], n_graphs: int, seed: int) -> List[L
 def load_mutagenicity(n_graphs: int = 200, seed: int = 0) -> List[Labeled]:
     """Mutagenicity (TUDataset, ~4337 real molecules) as atom-labeled graphs."""
     try:
-        import torch_geometric  # noqa: F401
-    except Exception as e:  # pragma: no cover
+        import torch_geometric
+    except Exception as e:
         raise ImportError(f"Mutagenicity requires torch-geometric: {e}")
     return _tu_labeled("Mutagenicity", _MUTAGENICITY_ATOMS, n_graphs, seed)
 
@@ -124,13 +122,12 @@ def load_mutagenicity(n_graphs: int = 200, seed: int = 0) -> List[Labeled]:
 def load_mutag_labeled(n_graphs: int = 150, seed: int = 0) -> List[Labeled]:
     """MUTAG with atom labels (for the label-aware projection)."""
     try:
-        import torch_geometric  # noqa: F401
-    except Exception as e:  # pragma: no cover
+        import torch_geometric
+    except Exception as e:
         raise ImportError(f"MUTAG requires torch-geometric: {e}")
     return _tu_labeled("MUTAG", _MUTAG_ATOMS, n_graphs, seed)
 
 
-# atomic-number → symbol for the common organic set (BBBP / MoleculeNet)
 _Z_SYMBOL = {6: "C", 7: "N", 8: "O", 9: "F", 15: "P", 16: "S", 17: "Cl",
              35: "Br", 53: "I", 5: "B", 11: "Na", 1: "H"}
 
@@ -143,7 +140,7 @@ def load_bbbp(n_graphs: int = 200, seed: int = 0) -> List[Labeled]:
     """
     try:
         from torch_geometric.datasets import MoleculeNet
-    except Exception as e:  # pragma: no cover
+    except Exception as e:
         raise ImportError(f"BBBP requires torch-geometric: {e}")
     import numpy as np
 
@@ -217,7 +214,7 @@ def _molecular_motif_task(label_smarts, gt_smarts, n_graphs, seed) -> List[Label
     """
     try:
         from rdkit import Chem
-    except Exception as e:  # pragma: no cover
+    except Exception as e:
         raise ImportError(f"molecular motif tasks require torch-geometric + rdkit: {e}")
     lab = [Chem.MolFromSmarts(s) for s in label_smarts]
     gtp = [Chem.MolFromSmarts(s) for s in gt_smarts]
@@ -261,9 +258,9 @@ def load_dataset(name: str, n_graphs: int = 150, seed: int = 0) -> List[Labeled]
         "bamultishapes": load_bamultishapes,
         "mutag": load_mutag,
         "mutag_labeled": load_mutag_labeled,
-        "mutagenicity": load_mutagenicity,   # real molecular (TUDataset)
-        "bbbp": load_bbbp,                    # real, in-the-wild (MoleculeNet), no oracle
-        "benzene": load_benzene,             # real molecules, benzene-ring GT motif
+        "mutagenicity": load_mutagenicity,
+        "bbbp": load_bbbp,
+        "benzene": load_benzene,
         "fluoride_carbonyl": load_fluoride_carbonyl,
         "alkane_carbonyl": load_alkane_carbonyl,
     }
@@ -272,7 +269,6 @@ def load_dataset(name: str, n_graphs: int = 150, seed: int = 0) -> List[Labeled]
     return loaders[name](n_graphs, seed)
 
 
-# datasets whose graphs carry atom labels → use the label-aware molecular vocabulary
 _MOLECULAR = {"mutag_labeled", "mutagenicity", "bbbp"}
 
 

@@ -1,0 +1,11 @@
+ba2motifs     ms0: consensus rho=+0.682 CI[+0.54,+0.78] | fidelity rho=+0.666 | core_prec(tau.8)=0.917 core_recall(tau.8)=0.667
+ba2motifs     ms1: consensus rho=+0.794 CI[+0.75,+0.84] | fidelity rho=+0.701 | core_prec(tau.8)=0.765 core_recall(tau.8)=0.137
+ba2motifs     ms2: consensus rho=+0.669 CI[+0.55,+0.75] | fidelity rho=+0.564 | core_prec(tau.8)=0.667 core_recall(tau.8)=0.218
+bamultishapes ms0: consensus rho=+0.525 CI[+0.45,+0.61] | fidelity rho=-0.274 | core_prec(tau.8)=0.958 core_recall(tau.8)=0.165
+bamultishapes ms1: consensus rho=+0.528 CI[+0.41,+0.62] | fidelity rho=-0.227 | core_prec(tau.8)=0.167 core_recall(tau.8)=0.015
+bamultishapes ms2: consensus rho=+0.548 CI[+0.46,+0.63] | fidelity rho=-0.430 | core_prec(tau.8)=0.794 core_recall(tau.8)=0.164
+
+=== PRE-DECLARED: consensus-agreement robust iff >=2/3 seeds CI-lower>0.2 on BOTH datasets ===
+  ba2motifs: CI-lower>0.2 in 3/3 model seeds
+  bamultishapes: CI-lower>0.2 in 3/3 model seeds
+  => consensus-agreement is ROBUST (constructive positive holds)

@@ -25,20 +25,19 @@ import numpy as np
 
 from .base import Explainer, Importance, canonical_edge
 
-_DEFERRED = {"subgraphx"}  # SubgraphX (DIG) still deferred — captum conflict
+_DEFERRED = {"subgraphx"}
 
 
 def build(name: str, model=None, dataset=None) -> Optional[Explainer]:
     """Return a real adapter bound to ``model``, or None if unavailable/deferred."""
     if name in _DEFERRED:
-        return None  # not in the cleanly-integrating EA roster (yet) — skip, never fake
+        return None
     if name == "random":
         return _RandomControl()
     if name == "gt_oracle":
-        return _GTOracle()  # torch-free correctness anchor (reads planted motif edges)
-    # torch-backed adapters — import-guarded
+        return _GTOracle()
     try:
-        import torch  # noqa: F401
+        import torch
         from torch_geometric.explain import Explainer as PyGExplainer
     except Exception:
         return None
@@ -50,7 +49,7 @@ def build(name: str, model=None, dataset=None) -> Optional[Explainer]:
         return _GNNExplainerAdapter(model)
     if name == "pgexplainer":
         if dataset is None:
-            return None  # PGExplainer needs the dataset to train its mask predictor
+            return None
         return _PGExplainerAdapter(model, dataset)
     return None
 
@@ -101,7 +100,7 @@ class _TorchAdapterBase:
         em = edge_mask.detach().cpu().numpy()
         for j in range(ei.shape[1]):
             key = canonical_edge(int(ei[0, j]), int(ei[1, j]))
-            imp[key] = max(imp.get(key, 0.0), float(em[j]))  # merge both directions
+            imp[key] = max(imp.get(key, 0.0), float(em[j]))
         return imp
 
 
@@ -148,10 +147,8 @@ class _CaptumIGAdapter(_TorchAdapterBase):
         from torch_geometric.explain import Explainer as PyGExplainer
         from torch_geometric.explain import CaptumExplainer, ModelConfig
 
-        torch.manual_seed(seed)  # IG is deterministic regardless — validator relies on this
+        torch.manual_seed(seed)
         data = self._to_data(graph)
-        # Edge-only attribution (we consume only edge importance) + allow_unused
-        # so edges with no gradient path get zero attribution instead of crashing.
         explainer = PyGExplainer(
             model=self.model,
             algorithm=CaptumExplainer("IntegratedGradients"),
@@ -177,12 +174,12 @@ class _PGExplainerAdapter(_TorchAdapterBase):
 
     name = "pgexplainer"
 
-    def __init__(self, model, dataset, epochs: int = 30, lr: float = 0.003):
+    def __init__(self, model, dataset, epochs: int = 100, lr: float = 0.003):
         super().__init__(model)
         self.dataset = list(dataset)
         self.epochs = epochs
         self.lr = lr
-        self._trained = {}  # seed -> trained PyG Explainer
+        self._trained = {}
 
     def _target(self, data):
         import torch
@@ -199,11 +196,11 @@ class _PGExplainerAdapter(_TorchAdapterBase):
 
         if seed in self._trained:
             return self._trained[seed]
-        torch.manual_seed(seed)  # seed drives mask-predictor init + training → stochasticity
+        torch.manual_seed(seed)
         explainer = PyGExplainer(
             model=self.model,
             algorithm=PGExplainer(epochs=self.epochs, lr=self.lr),
-            explanation_type="phenomenon",  # PGExplainer requires phenomenon
+            explanation_type="phenomenon",
             edge_mask_type="object",
             node_mask_type=None,
             model_config=ModelConfig(mode="multiclass_classification", task_level="graph", return_type="raw"),

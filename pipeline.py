@@ -24,7 +24,7 @@ from .project.projection import project
 from .project.threshold import threshold
 from .project.vocab import default_vocab, vocab_names
 
-Labeled = Tuple[nx.Graph, int]  # (graph, class label)
+Labeled = Tuple[nx.Graph, int]
 
 
 class CachingExplainer:
@@ -58,7 +58,7 @@ def rule_for_seed(
     vectors, labels = [], []
     for graph, label in dataset:
         importance = explainer.explain(graph, seed)
-        sub = threshold(importance, k, graph)  # carry atom/bond labels for label-aware concepts
+        sub = threshold(importance, k, graph)
         vectors.append(project(sub, vocab))
         labels.append(int(label))
     return learn_rule(vectors, labels, names, kind=aggregator)

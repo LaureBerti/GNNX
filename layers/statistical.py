@@ -41,7 +41,7 @@ def chance_corrected_overlap(a: Sequence[float], b: Sequence[float], k: int) -> 
 def kendall_tau(a: Sequence[float], b: Sequence[float]) -> float:
     """Kendall's τ between two importance rankings (NaN → 0.0 for constant input)."""
     tau, _ = kendalltau(a, b)
-    return float(tau) if tau == tau else 0.0  # NaN guard
+    return float(tau) if tau == tau else 0.0
 
 
 def support_variance(concept_vectors: Sequence[Dict[str, int]]) -> Dict[str, float]:

@@ -23,7 +23,7 @@ import numpy as np
 @dataclass(frozen=True)
 class Clause:
     """A conjunction of concept literals ⇒ a class label. Empty antecedent = always fires."""
-    antecedent: Dict[str, int]  # concept name -> required 0/1
+    antecedent: Dict[str, int]
     label: int
 
     def matches(self, assignment: Mapping[str, int]) -> bool:
@@ -89,7 +89,7 @@ def learn_rule(
         return _conj_rule(X, y, names)
     if kind == "tree2":
         return _tree_rule(X, y, names, max_depth=2, criterion="entropy")
-    if kind == "corels":  # opt-in only; never the default (see docstring)
+    if kind == "corels":
         rule = _corels_rule(X, y, names)
         if rule is not None:
             return rule
@@ -101,7 +101,7 @@ def _onerule_rule(X, y, names) -> Rule:
     emit a one-literal rule (present -> majority label there; default -> majority
     among absent). Deterministic; ties break on concept index."""
     default_all = int(np.bincount(y).argmax())
-    best = None  # (accuracy, -index, concept, label_present, label_absent)
+    best = None
     for j, name in enumerate(names):
         col = X[:, j]
         pres, absc = y[col == 1], y[col == 0]
@@ -124,11 +124,11 @@ def _conj_rule(X, y, names, max_lits: int = 2) -> Rule:
     different hypothesis family from both decision lists/trees and OneR. Deterministic;
     ties break on concept index."""
     default_all = int(np.bincount(y).argmax())
-    target = int(1 - default_all)  # minority class
+    target = int(1 - default_all)
     ante: Dict[str, int] = {}
     mask = np.ones(len(y), dtype=bool)
     for _ in range(max_lits):
-        best = None  # (accuracy_on_covered, -index, name)
+        best = None
         for j, name in enumerate(names):
             if name in ante:
                 continue
@@ -143,12 +143,11 @@ def _conj_rule(X, y, names, max_lits: int = 2) -> Rule:
             break
         _, name, j = best
         cand = mask & (X[:, j] == 1)
-        # stop if adding this literal no longer purifies toward the target
         if (y[cand] == target).mean() < (y[mask] == target).mean():
             break
         ante[name] = 1
         mask = cand
-    if not ante:  # no useful literal → constant rule
+    if not ante:
         return Rule(clauses=[], default=default_all, names=list(names))
     label = int(np.bincount(y[mask]).argmax()) if mask.any() else target
     return Rule(clauses=[Clause(antecedent=ante, label=label)],
@@ -157,17 +156,16 @@ def _conj_rule(X, y, names, max_lits: int = 2) -> Rule:
 
 def _corels_rule(X, y, names) -> Optional[Rule]:
     try:
-        from corels import CorelsClassifier  # type: ignore
+        from corels import CorelsClassifier
     except Exception:
         return None
     try:
         clf = CorelsClassifier(verbosity=[])
         clf.fit(X, y, features=list(names))
-        # CorelsClassifier.rl() gives an ordered rule list; lower it to clauses.
         rl = clf.rl()
         clauses: List[Clause] = []
         default = int(np.bincount(y).argmax())
-        for r in rl.rules[:-1]:  # last is the default rule
+        for r in rl.rules[:-1]:
             ante = {names[a[0]]: 1 for a in r["antecedents"] if a[0] >= 0}
             clauses.append(Clause(antecedent=ante, label=int(r["prediction"])))
         default = int(rl.rules[-1]["prediction"])
@@ -186,18 +184,17 @@ def _tree_rule(X, y, names, max_depth: Optional[int] = None, criterion: str = "g
     clauses: List[Clause] = []
 
     def recurse(node: int, ante: Dict[str, int]):
-        if t.children_left[node] == t.children_right[node]:  # leaf
+        if t.children_left[node] == t.children_right[node]:
             label = int(np.argmax(t.value[node][0]))
             clauses.append(Clause(antecedent=dict(ante), label=label))
             return
-        feat = names[t.feature[node]]  # binary features: threshold ~0.5
-        left = dict(ante); left[feat] = 0   # feature <= 0.5  → absent
+        feat = names[t.feature[node]]
+        left = dict(ante); left[feat] = 0
         recurse(t.children_left[node], left)
-        right = dict(ante); right[feat] = 1  # feature > 0.5   → present
+        right = dict(ante); right[feat] = 1
         recurse(t.children_right[node], right)
 
     recurse(0, {})
     default = int(np.bincount(y).argmax())
-    # Order clauses deterministically (by antecedent items) so equal data → equal rule.
     clauses.sort(key=lambda c: (sorted(c.antecedent.items()), c.label))
     return Rule(clauses=clauses, default=default, names=names)

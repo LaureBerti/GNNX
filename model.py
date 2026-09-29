@@ -12,7 +12,7 @@ from typing import List, Sequence, Tuple
 import networkx as nx
 import numpy as np
 
-try:  # torch/PyG are the optional [explainers] extra — skip-if-import
+try:
     import torch
     import torch.nn.functional as F
     from torch.nn import Linear, ReLU, Sequential
@@ -21,11 +21,11 @@ try:  # torch/PyG are the optional [explainers] extra — skip-if-import
     from torch_geometric.nn import GINConv, global_add_pool
 
     _TORCH = True
-except Exception:  # pragma: no cover - exercised only without torch
+except Exception:
     _TORCH = False
 
 Labeled = Tuple[nx.Graph, int]
-_MAX_DEG = 10  # one-hot degree cap → feature dim
+_MAX_DEG = 10
 
 
 def _degree_features(g: nx.Graph):
@@ -43,7 +43,7 @@ def nx_to_pyg(graph: nx.Graph, label: int) -> "Data":
     """Convert an (nx.Graph, label) into a PyG Data with one-hot degree features."""
     x_np, idx = _degree_features(graph)
     edges = [[idx[u], idx[v]] for u, v in graph.edges()]
-    edges += [[v, u] for u, v in edges]  # undirected → both directions
+    edges += [[v, u] for u, v in edges]
     edge_index = (
         torch.tensor(edges, dtype=torch.long).t().contiguous()
         if edges
@@ -70,8 +70,6 @@ if _TORCH:
             self.lin = Linear(hidden, n_classes)
 
         def forward(self, x, edge_index, batch=None):
-            # batch defaults to a single graph → compatible with PyG's Explainer,
-            # which calls model(x, edge_index) without a batch vector.
             if batch is None:
                 batch = torch.zeros(x.size(0), dtype=torch.long, device=x.device)
             for conv in self.convs:
@@ -89,7 +87,7 @@ def train_gin(
     seed: int = 0,
 ) -> Tuple["GIN", float]:
     """Train a GIN; return (model, train_accuracy). Deterministic given seed."""
-    if not _TORCH:  # pragma: no cover
+    if not _TORCH:
         raise ImportError("train_gin requires torch + torch-geometric ([explainers] extra)")
     torch.manual_seed(seed)
     np.random.seed(seed)
@@ -109,7 +107,7 @@ def train_gin(
 
 
 def evaluate(model: "GIN", dataset: Sequence[Labeled]) -> float:
-    if not _TORCH:  # pragma: no cover
+    if not _TORCH:
         raise ImportError("evaluate requires torch + torch-geometric")
     model.eval()
     correct = 0

@@ -29,12 +29,12 @@ def wilson_ci(successes: int, n: int, z: float = 1.96) -> Tuple[float, float]:
 
 @dataclass
 class ConsistencyResult:
-    rate: float                 # fraction of consistent seed-pairs
+    rate: float
     n_pairs: int
     n_consistent: int
-    ci: Tuple[float, float]     # Wilson 95% CI
+    ci: Tuple[float, float]
     mean_graded_agreement: float
-    under_powered: bool         # True if S below the seed floor
+    under_powered: bool
 
     def as_dict(self) -> dict:
         return {

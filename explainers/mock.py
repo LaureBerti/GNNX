@@ -45,20 +45,18 @@ class MockExplainer:
     def explain(self, graph: nx.Graph, seed: int) -> Importance:
         edges = [canonical_edge(u, v) for u, v in graph.edges()]
         if self.mode == "deterministic":
-            # Seed-independent: a fixed function of the (sorted) edge identity.
             return {e: _fixed_score(e) for e in edges}
 
         rng = np.random.default_rng(self.base_seed + seed)
         imp: Importance = {e: float(rng.random()) for e in edges}
 
-        # Planted-contradiction path: give the true motif (or decoy) top scores.
         if self.motif_edges is not None:
             highlight = self.motif_edges
             if self.decoy_edges is not None and rng.random() < self.contradiction_rate:
                 highlight = self.decoy_edges
             for e in highlight:
                 if e in imp:
-                    imp[e] += 1.0  # push planted edges above the random floor
+                    imp[e] += 1.0
         return imp
 
 
@@ -67,6 +65,5 @@ def _canon(edges: Iterable[Tuple[int, int]]) -> list[Edge]:
 
 
 def _fixed_score(edge: Edge) -> float:
-    # Deterministic, stable across processes: derived from the sorted node ids.
     a, b = sorted(edge)
     return float((a * 131 + b) % 1000) / 1000.0
