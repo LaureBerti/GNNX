@@ -1,7 +1,7 @@
 # A Confounder-Controlled Self-Consistency Diagnostic for GNN Explanations
 
 Open code artifact for the paper *"Statistically Consistent, Logically Contradictory? A
-Confounder-Controlled Self-Consistency Diagnostic for GNN Explanations"* (under double-blind review).
+Confounder-Controlled Self-Consistency Diagnostic for GNN Explanations"* (under review).
 
 The tool audits a post-hoc GNN-classification explainer on **two axes at once**: a **statistical**
 axis (chance-corrected top-*k* mask overlap and Kendall's τ across seeds) and a **logical** axis
